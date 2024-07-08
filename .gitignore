@@ -3,3 +3,4 @@
 /__pycache__
 /app/__init.__py
 /app/__pycache__
+/.env
