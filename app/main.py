@@ -5,7 +5,6 @@ from fastapi import FastAPI, HTTPException, Query
 from datetime import datetime
 from pytz import timezone, utc
 from timezonefinder import TimezoneFinder
-from models import WeatherResponse
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -89,11 +88,11 @@ def get_weather_data(lat: float, lon: float) -> dict:
         raise HTTPException(status_code=response.status_code, detail="Failed to fetch weather data")
 
 # GET endpoint 
-@app.get("/weather", response_model=WeatherResponse)
+@app.get("/weather")
 async def get_weather(lat: float = Query(..., description="Latitude for which to retrieve weather"),
                       lon: float = Query(..., description="Longitude for which to retrieve weather")):
     try:
         data = get_weather_data(lat=lat, lon=lon)
-        return WeatherResponse(**data)
+        return data
     except HTTPException as e:
         raise e
