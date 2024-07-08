@@ -1,3 +1,5 @@
 /venv
 /.vscode
 /__pycache__
+/app/__init.__py
+/app/__pycache__
