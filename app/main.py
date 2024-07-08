@@ -1,4 +1,5 @@
 import os
+import pycountry
 import requests
 from fastapi import FastAPI, HTTPException, Query
 from datetime import datetime
@@ -32,6 +33,8 @@ def get_weather_data(lat: float, lon: float) -> dict:
         weather_data = response.json()
         
         # Extract weather details
+        country_code = weather_data['sys'].get('country', 'Unknown')
+        country = pycountry.countries.get(alpha_2=country_code).name if country_code != 'Unknown' else 'Unknown'
         city = weather_data.get('name', 'Unknown')
         temperature = weather_data['main']['temp']
         humidity = weather_data['main']['humidity']
@@ -39,6 +42,7 @@ def get_weather_data(lat: float, lon: float) -> dict:
         feels_like = weather_data['main']['feels_like']
 
         # Handling possible absence of rain information
+        print(weather_data)
         precipitation = weather_data.get('rain', {}).get('1h', 0.0) if 'rain' in weather_data else 0.0
         
         # Convert UTC time to local time using timezonefinder
@@ -57,9 +61,10 @@ def get_weather_data(lat: float, lon: float) -> dict:
         local_time = utc_time.astimezone(target_timezone)
         
         date = local_time.strftime('%Y-%m-%d')
-        time = local_time.strftime('%H:%M:%S %Z%z')
+        time = local_time.strftime('%H:%M')
 
         return {
+            "country": country,
             "city": city,
             "temperature": temperature,
             "humidity": humidity,

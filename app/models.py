@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 class WeatherResponse(BaseModel):
+    country: str
     city: str
     temperature: float
     humidity: int
